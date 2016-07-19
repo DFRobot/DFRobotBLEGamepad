@@ -1,0 +1,33 @@
+#######################################
+# Syntax Coloring Map simpleBLEGamepad
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+simpleBLEGamepad	KEYWORD1	simpleBLEGamepad
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+readJoystickX	KEYWORD2
+readJoystickY	KEYWORD2
+
+readSwitch_A	KEYWORD2
+readSwitch_B	KEYWORD2
+readSwitch_C	KEYWORD2
+readSwitch_D	KEYWORD2
+readSwitch_F1	KEYWORD2
+readSwitch_F2	KEYWORD2
+
+BUTTON_A_IsPressed	KEYWORD2
+BUTTON_B_IsPressed	KEYWORD2
+BUTTON_C_IsPressed	KEYWORD2
+BUTTON_D_IsPressed	KEYWORD2
+BUTTON_F1_IsPressed	KEYWORD2
+BUTTON_F2_IsPressed	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
