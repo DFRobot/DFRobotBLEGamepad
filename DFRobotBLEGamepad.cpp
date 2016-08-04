@@ -1,7 +1,6 @@
 /*!
 * @file DFRobotBLEGamepad.cpp
 * @brief DFRobot's Wireless Gamepad - Arduino with Bluetooth 4.0 (SKU:DFR0304)
-* @n [Get the gamepad here](http://www.dfrobot.com/index.php?route=product/product&keyword=wirele&product_id=1170#.V43enPmEA9R)
 * @n This is the library for DFRobot's Wireless Gamepad V2.0
 * @n [Schematics]([http://www.dfrobot.com/wiki/index.php?title=BLE_Wireless_Gamepad_V2_SKU:_DFR0304])
 *
@@ -32,6 +31,7 @@ void (*DFRobotBLEGamepad::userButtonLeftCallback)(void);
 void (*DFRobotBLEGamepad::userButtonRightCallback)(void);
 void (*DFRobotBLEGamepad::userButtonLeftF1Callback)(void);
 void (*DFRobotBLEGamepad::userButtonLeftF2Callback)(void);
+void (*DFRobotBLEGamepad::userButtonLeftStickCallback)(void);
 
 void(*DFRobotBLEGamepad::userButton4Callback)(void);
 void(*DFRobotBLEGamepad::userButton2Callback)(void);
@@ -39,7 +39,7 @@ void(*DFRobotBLEGamepad::userButton1Callback)(void);
 void(*DFRobotBLEGamepad::userButton3Callback)(void);
 void(*DFRobotBLEGamepad::userButtonRightF1Callback)(void);
 void(*DFRobotBLEGamepad::userButtonRightF2Callback)(void);                  
-
+void(*DFRobotBLEGamepad::userButtonRightStickCallback)(void);
 
 /*
  * User configuration for the baudrate of the BLE communication
@@ -60,13 +60,15 @@ void DFRobotBLEGamepad::begin(Stream& theSerial) {
   rDataPack.prbpayType.switchButtonRight = RELEASED;
   rDataPack.prbpayType.switchButtonLeftF1 = RELEASED;
   rDataPack.prbpayType.switchButtonLeftF2 = RELEASED;
+  rDataPack.prbpayType.switchButtonLeftStick = RELEASED;
 
   rDataPack.prbpayType.switchButton4 = RELEASED;
   rDataPack.prbpayType.switchButton2 = RELEASED;
   rDataPack.prbpayType.switchButton1 = RELEASED;
   rDataPack.prbpayType.switchButton3 = RELEASED;
   rDataPack.prbpayType.switchButtonRightF1 = RELEASED;
-  rDataPack.prbpayType.switchButtonRightF2 = RELEASED;                                      
+  rDataPack.prbpayType.switchButtonRightF2 = RELEASED;  
+  rDataPack.prbpayType.switchButtonRightStick = RELEASED;
 
   memset(bleDataArray, 0x00, sizeof(bleDataArray));
   bleDataIndex = 0;
@@ -171,6 +173,11 @@ boolean DFRobotBLEGamepad::available() {
 				userButtonLeftF2Callback();	
 				rDataPack.bpayType.switchButtonLeftF2 = RELEASED;
 				}
+		if ((rDataPack.bpayType.switchButtonLeftStick == PRESSED) &&
+			userButtonLeftStickCallback) {
+			userButtonLeftStickCallback();
+			rDataPack.bpayType.switchButtonLeftStick = RELEASED;
+		}
 
 		// if press the button, trigger the user button event functions
 		if ( (rDataPack.bpayType.switchButton4 == PRESSED) &&
@@ -202,7 +209,12 @@ boolean DFRobotBLEGamepad::available() {
 			userButtonRightF2Callback) {
 			userButtonRightF2Callback();
 			rDataPack.bpayType.switchButtonRightF2 = RELEASED;
-		}                                                                           
+		}  
+		if ((rDataPack.bpayType.switchButtonRightStick == PRESSED) &&
+			userButtonRightStickCallback) {
+			userButtonRightStickCallback();
+			rDataPack.bpayType.switchButtonRightStick = RELEASED;
+		}
 		return true;
     }
 	else {
@@ -249,6 +261,10 @@ boolean DFRobotBLEGamepad::readSwitchLeftF2() {
   return this->rDataPack.bpayType.switchButtonLeftF2;
 }
 
+boolean DFRobotBLEGamepad::readSwitchLeftStick() {
+	return this->rDataPack.bpayType.switchButtonLeftStick;
+}
+
 
 boolean DFRobotBLEGamepad::readSwitch4() {
 	return this->rDataPack.bpayType.switchButton4;
@@ -272,7 +288,11 @@ boolean DFRobotBLEGamepad::readSwitchRightF1() {
 
 boolean DFRobotBLEGamepad::readSwitchRightF2() {
 	return this->rDataPack.bpayType.switchButtonRightF2;
-}                                                                              
+} 
+
+boolean DFRobotBLEGamepad::readSwitchRightStick() {
+	return this->rDataPack.bpayType.switchButtonRightStick;
+}
 
 
 /* 
@@ -296,6 +316,9 @@ void DFRobotBLEGamepad::ButtonLeftF1IsPressed(void (*function)(void)){
 void DFRobotBLEGamepad::ButtonLeftF2IsPressed(void (*function)(void)){
   userButtonLeftF2Callback = function;  
 }
+void DFRobotBLEGamepad::ButtonLeftStickIsPressed(void(*function)(void)) {
+	userButtonLeftStickCallback = function;
+}
 
 
 void DFRobotBLEGamepad::Button4IsPressed(void(*function)(void)) {
@@ -315,7 +338,10 @@ void DFRobotBLEGamepad::ButtonRightF1IsPressed(void(*function)(void)) {
 }
 void DFRobotBLEGamepad::ButtonRightF2IsPressed(void(*function)(void)) {
 	userButtonRightF2Callback = function;
-}                                                                                         
+}   
+void DFRobotBLEGamepad::ButtonRightStickIsPressed(void(*function)(void)) {
+	userButtonRightStickCallback = function;
+}
 
 
 byte DFRobotBLEGamepad::digitalButtonParser( void ){
@@ -327,15 +353,24 @@ byte DFRobotBLEGamepad::digitalButtonParser( void ){
 	this->rDataPack.prbpayType.switchButtonRight = this->rDataPack.bpayType.switchButtonRight;
 	this->rDataPack.prbpayType.switchButtonLeftF1 = this->rDataPack.bpayType.switchButtonLeftF1;
 	this->rDataPack.prbpayType.switchButtonLeftF2 = this->rDataPack.bpayType.switchButtonLeftF2;
+	this->rDataPack.prbpayType.switchButtonLeftStick = this->rDataPack.bpayType.switchButtonLeftStick;
 
 	this->rDataPack.prbpayType.switchButton4 = this->rDataPack.bpayType.switchButton4;
 	this->rDataPack.prbpayType.switchButton2 = this->rDataPack.bpayType.switchButton2;
 	this->rDataPack.prbpayType.switchButton1 = this->rDataPack.bpayType.switchButton1;
 	this->rDataPack.prbpayType.switchButton3 = this->rDataPack.bpayType.switchButton3;
 	this->rDataPack.prbpayType.switchButtonRightF1 = this->rDataPack.bpayType.switchButtonRightF1;
-	this->rDataPack.prbpayType.switchButtonRightF2 = this->rDataPack.bpayType.switchButtonRightF2;                
+	this->rDataPack.prbpayType.switchButtonRightF2 = this->rDataPack.bpayType.switchButtonRightF2;  
+	this->rDataPack.prbpayType.switchButtonRightStick = this->rDataPack.bpayType.switchButtonRightStick;
 
 	
+  if (rDataPack.digitalButton[0] & DIGITALBUTTONLeftStick) {
+		rDataPack.bpayType.switchButtonLeftStick = PRESSED;
+		length++;
+	}
+   else {
+		rDataPack.bpayType.switchButtonLeftStick = RELEASED;
+	}
   if( rDataPack.digitalButton[0] & DIGITALBUTTONLeftF1 ){
 	  rDataPack.bpayType.switchButtonLeftF1 = PRESSED;
 	  length++;
@@ -378,6 +413,13 @@ byte DFRobotBLEGamepad::digitalButtonParser( void ){
   }                                                                          
 
 
+  if (rDataPack.digitalButton[0] & DIGITALBUTTONRightStick) {
+	  rDataPack.bpayType.switchButtonRightStick = PRESSED;
+	  length++;
+  }
+  else {
+	  rDataPack.bpayType.switchButtonRightStick = RELEASED;
+  }
   if (rDataPack.digitalButton[0] & DIGITALBUTTONRightF1) {
 	  rDataPack.bpayType.switchButtonRightF1 = PRESSED;
 	  length++;
@@ -445,7 +487,7 @@ int DFRobotBLEGamepad::bleDataPackageParser() {
   rDataPack.header2 = bleDataArray[1], calculateSum ^=  rDataPack.header2;
   
 
-  if( rDataPack.header1 != DEFAULTHEADER1 )     return 0x11;										  //check 1st and 2nd header byte
+  if( rDataPack.header1 != DEFAULTHEADER1 )     return 0x11;																//check 1st and 2nd header byte
   if( rDataPack.header2 != DEFAULTHEADER2 )     return 0x11;
   
   rDataPack.address = bleDataArray[2], calculateSum ^=  rDataPack.address;										//get address byte

@@ -21,18 +21,20 @@
 #define SWITCH_RIGHT   3
 #define SWITCH_LEFT_F1  4
 #define SWITCH_LEFT_F2  5
+#define SWITCH_LEFT_STICK  6
 
-#define SWITCH_4   6
-#define SWITCH_2   7
-#define SWITCH_1   8
-#define SWITCH_3   9
-#define SWITCH_RIGHT_F1  10
-#define SWITCH_RIGHT_F2  11
+#define SWITCH_4   7
+#define SWITCH_2   8
+#define SWITCH_1   9
+#define SWITCH_3   10
+#define SWITCH_RIGHT_F1  11
+#define SWITCH_RIGHT_F2  12
+#define SWITCH_RIGHT_STICK  13
 
-DFRobotBLEGamepad myDFRobotBLEGamepad;
+DFRobotBLEGamepad myDFRobotBLEGamepad;                                   
 int joystickRightX, joystickRightY;                                      //Right joystick value         
 int joystickLeftX, joystickLeftY;                                        //Left joystick value    
-boolean buttonState[12];                                                 //buttons buffer
+boolean buttonState[14];                                                 //buttons buffer
 void setup() {
   Serial.begin(115200);                                                 //init the bluetooth Serial port
   myDFRobotBLEGamepad.begin(Serial);    
@@ -55,6 +57,7 @@ void loop() {
     buttonState[SWITCH_RIGHT] = myDFRobotBLEGamepad.readSwitchRight();
     buttonState[SWITCH_LEFT_F1] = myDFRobotBLEGamepad.readSwitchLeftF1();
     buttonState[SWITCH_LEFT_F2] = myDFRobotBLEGamepad.readSwitchLeftF2();
+    buttonState[SWITCH_LEFT_STICK] = myDFRobotBLEGamepad.readSwitchLeftStick();
 
     buttonState[SWITCH_1] = myDFRobotBLEGamepad.readSwitch1();
     buttonState[SWITCH_2] = myDFRobotBLEGamepad.readSwitch2();
@@ -62,6 +65,7 @@ void loop() {
     buttonState[SWITCH_4] = myDFRobotBLEGamepad.readSwitch4();
     buttonState[SWITCH_RIGHT_F1] = myDFRobotBLEGamepad.readSwitchRightF1();
     buttonState[SWITCH_RIGHT_F2] = myDFRobotBLEGamepad.readSwitchRightF2();
+    buttonState[SWITCH_RIGHT_STICK] = myDFRobotBLEGamepad.readSwitchRightStick();
     
 	//print the state of Left Joystick
     Serial.print( "Joystick Left Value: " );                                   
@@ -74,10 +78,10 @@ void loop() {
     Serial.print("  ");
     Serial.println( joystickRightY );
     //print the state of buttons
-    for ( int i = 0; i < 12; i++ ){
+    for ( int i = 0; i < 14; i++ ){
       if (buttonState[i] == PRESSED) {
         Serial.print(" ID: ");
-        Serial.print(i+1);
+        Serial.print(i);
         Serial.print("\t ");
         Serial.print("Pressed!");
        }

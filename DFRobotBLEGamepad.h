@@ -1,7 +1,6 @@
 /*!!
 * @file DFRobotBLEGamepad.h
 * @brief DFRobot's Wireless Gamepad - Arduino with Bluetooth 4.0 (SKU:DFR0304)
-* @n [Get the gamepad here](http://www.dfrobot.com/index.php?route=product/product&keyword=wirele&product_id=1170#.V43enPmEA9R)
 * @n This is the library for DFRobot's Wireless Gamepad
 * @n [Schematics]([http://www.dfrobot.com/wiki/index.php?title=BLE_Wireless_Gamepad_V2_SKU:_DFR0304])
 *
@@ -59,13 +58,15 @@ const boolean RELEASED = HIGH;
 #define DIGITALBUTTONRight			0x08
 #define DIGITALBUTTONLeftF1		0x01
 #define DIGITALBUTTONLeftF2		0x02
+#define DIGITALBUTTONLeftStick		0x08
 
 #define DIGITALBUTTON4			0x10
 #define DIGITALBUTTON2			0x20
 #define DIGITALBUTTON1			0x40
 #define DIGITALBUTTON3			0x80
 #define DIGITALBUTTONRightF1		0x20
-#define DIGITALBUTTONRightF2		0x40                                           
+#define DIGITALBUTTONRightF2		0x40
+#define DIGITALBUTTONRightStick		0x80
 
 
 #define MAXBUTTONNUMBER     8													//Effect of the number buttons from operating mode
@@ -81,6 +82,7 @@ typedef struct buttonPayload {
 	boolean switchButtonRight;
 	boolean switchButtonLeftF1;
 	boolean switchButtonLeftF2;
+	boolean switchButtonLeftStick;
 
 	boolean switchButton4;
 	boolean switchButton2;
@@ -88,6 +90,7 @@ typedef struct buttonPayload {
 	boolean switchButton3;
 	boolean switchButtonRightF1;
 	boolean switchButtonRightF2;
+	boolean switchButtonRightStick;
 }buttonPayloadType;
 
 //Data Link package
@@ -194,6 +197,10 @@ public:
 	* @brief Reads the current state of LF2 button. It will return LOW if the button is pressed, and HIGH otherwise.
 	*/
 	boolean readSwitchLeftF2();
+	/*!
+	* @brief Reads the current state of Left stick button. It will return LOW if the button is pressed, and HIGH otherwise.
+	*/
+	boolean readSwitchLeftStick();
 
 
 	/*!
@@ -220,6 +227,10 @@ public:
 	* @brief Reads the current state of RF2 button. It will return LOW if the button is pressed, and HIGH otherwise.
 	*/
 	boolean readSwitchRightF2();
+	/*!
+	* @brief Reads the current state of right stick button. It will return LOW if the button is pressed, and HIGH otherwise.
+	*/
+	boolean readSwitchRightStick();
 
 	/*!
 	* @brief Call back functions for switchLA pressed event
@@ -245,6 +256,10 @@ public:
 	* @brief Call back functions for switchLF2 pressed event
 	*/
 	void ButtonLeftF2IsPressed(void(*)(void));
+	/*!
+	* @brief Call back functions for switchLeftstick pressed event
+	*/
+	void ButtonLeftStickIsPressed(void(*)(void));
 
 	/*!
 	* @brief Call back functions for switchRA pressed event
@@ -270,6 +285,10 @@ public:
 	* @brief Call back functions for switchRF2 pressed event
 	*/
 	void ButtonRightF2IsPressed(void(*)(void));
+	/*!
+	* @brief Call back functions for switchRightstick pressed event
+	*/
+	void ButtonRightStickIsPressed(void(*)(void));
 
 private:
 
@@ -317,6 +336,7 @@ private:
 	static void(*userButtonRightCallback)(void);
 	static void(*userButtonLeftF1Callback)(void);
 	static void(*userButtonLeftF2Callback)(void);
+	static void(*userButtonLeftStickCallback)(void);
 
 	static void(*userButton4Callback)(void);
 	static void(*userButton2Callback)(void);
@@ -324,6 +344,7 @@ private:
 	static void(*userButton3Callback)(void);
 	static void(*userButtonRightF1Callback)(void);
 	static void(*userButtonRightF2Callback)(void);
+	static void(*userButtonRightStickCallback)(void);
 };
 
 #endif 

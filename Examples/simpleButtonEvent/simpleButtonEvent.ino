@@ -39,12 +39,14 @@ void setup(){
   myDFRobotBLEGamepad.ButtonRightIsPressed( switchRightEvent );			    // call the custom switch event function
   myDFRobotBLEGamepad.ButtonLeftF1IsPressed( switchLeftF1Event );		    // call the custom switch event function
   myDFRobotBLEGamepad.ButtonLeftF2IsPressed( switchLeftF2Event );		    // call the custom switch event function
+  myDFRobotBLEGamepad.ButtonLeftStickIsPressed( switchLeftStickEvent );        // call the custom switch event function
   myDFRobotBLEGamepad.Button4IsPressed( switch4Event );                     // call the custom switch event function
   myDFRobotBLEGamepad.Button2IsPressed( switch2Event );                     // call the custom switch event function
   myDFRobotBLEGamepad.Button1IsPressed( switch1Event );                     // call the custom switch event function
   myDFRobotBLEGamepad.Button3IsPressed( switch3Event );                     // call the custom switch event function
   myDFRobotBLEGamepad.ButtonRightF1IsPressed( switchRightF1Event );         // call the custom switch event function
   myDFRobotBLEGamepad.ButtonRightF2IsPressed( switchRightF2Event );         // call the custom switch event function
+  myDFRobotBLEGamepad.ButtonRightStickIsPressed( switchRightStickEvent );        // call the custom switch event function
 }
 
 void loop() {
@@ -108,6 +110,13 @@ void switchLeftF2Event( void ){
   ledState = !ledState;														//change the LED state
   Serial.println("Trigger Switch ButtonLeftF2 Event!");						//print the debug log
 }
+/*
+ *if button-LeftStick is pressed,the system will call this function
+ */
+void switchLeftStickEvent( void ){
+  ledState = !ledState;                            //change the LED state
+  Serial.println("Trigger Switch ButtonLeftStick Event!");           //print the debug log
+}
 
 /*
  *if button-4 is pressed,the system will call this function
@@ -156,3 +165,11 @@ void switchRightF2Event( void ){
   ledState = !ledState;                                                //change the LED state
   Serial.println("Trigger Switch ButtonRightF2 Event!");               //print the debug log
 }
+/*
+ *if button-RightStick is pressed,the system will call this function
+ */
+void switchRightStickEvent( void ){
+  ledState = !ledState;                            //change the LED state
+  Serial.println("Trigger Switch ButtonRightStick Event!");           //print the debug log
+}
+
